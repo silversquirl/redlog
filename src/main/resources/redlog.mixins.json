@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "vktec.redlog.mixins",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"BlockStateMixin",
+		"LoggerRegistryMixin",
+		"MinecraftServerMixin",
+		"PistonBlockEntityMixin",
+		"ServerWorldMixin"
+	],
+	"client": [
+		"MinecraftClientMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
