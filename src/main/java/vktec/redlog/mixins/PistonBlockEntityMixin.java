@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import vktec.redlog.RedEventLogger;
+import vktec.redlog.events.RedBlock36Event;
 
 @Mixin(PistonBlockEntity.class)
 public abstract class PistonBlockEntityMixin extends BlockEntity {
@@ -28,21 +29,16 @@ public abstract class PistonBlockEntityMixin extends BlockEntity {
 
 	public void setLocation(World world, BlockPos pos) {
 		super.setLocation(world, pos);
-		this.logStart();
+		this.log(true);
 	}
 
 	public void markRemoved() {
-		if (!this.isRemoved()) this.logFinish();
+		if (!this.isRemoved()) this.log(false);
 		super.markRemoved();
 	}
 
-	private void logStart() {
-		if (world.isClient) return;
-		RedEventLogger.get("block36").log(this.world, this.getHeadBlockState(), this.pos, "start");
-	}
-
-	private void logFinish() {
+	private void log(boolean start) {
 		if (this.world.isClient) return;
-		RedEventLogger.get("block36").log(this.world, this.getHeadBlockState(), this.pos, "finish");
+		RedEventLogger.get("block36").log(new RedBlock36Event((ServerWorld)this.world, this.getHeadBlockState(), this.pos, false));
 	}
 }

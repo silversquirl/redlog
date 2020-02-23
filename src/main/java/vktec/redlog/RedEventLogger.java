@@ -1,17 +1,28 @@
 package vktec.redlog;
 
+import carpet.CarpetServer;
 import carpet.logging.Logger;
 import carpet.logging.LoggerRegistry;
+import carpet.script.CarpetExpression;
+import carpet.script.CarpetContext;
+import carpet.script.Context;
+import carpet.script.RedlogHaxxor;
+import carpet.script.exception.ExpressionException;
+import carpet.script.value.BlockValue;
+import carpet.script.value.NumericValue;
+import carpet.script.value.StringValue;
 import carpet.utils.Messenger;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.regex.Pattern;
 import net.minecraft.block.BlockState;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.BaseText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import vktec.redlog.events.RedEvent;
 
 public class RedEventLogger {
 	private static int indentLevel;
@@ -30,6 +41,8 @@ public class RedEventLogger {
 		if (indentLevel != 0) System.out.println("Cleared all indents");
 		indentLevel = 0;
 	}
+
+	private static CarpetContext scriptContext = new CarpetContext(CarpetServer.scriptServer.globalHost, null, new BlockPos(0, 0, 0));
 
 	private static String getIndentString() {
 		if (indentLevel == 0) return "";
@@ -61,27 +74,43 @@ public class RedEventLogger {
 
 	private final Logger logger;
 	private final String kind;
-	private Pattern filter;
+	private CarpetExpression filter;
 
 	private RedEventLogger(String logName) {
 		this.logger = LoggerRegistry.getLogger(logName);
 		this.kind = name2kind.get(logName);
-		try {
-			this.setFilter((String)RedlogFilterSettings.class.getDeclaredField(logName).get(null));
-		} catch (IllegalAccessException e) {
-			System.out.println("Error: Unable to access field '" + this.logger.getLogName() + "'");
-			((Object)null).toString(); // Crash the game
-		} catch (NoSuchFieldException e) {
-			System.out.println("Error: No such field '" + this.logger.getLogName() + "'");
-			((Object)null).toString(); // Crash the game
-		}
+		this.setFilter(null, RedlogExtension.getFilter(logName));
 	}
 
-	public void setFilter(String filter) {
+	public void setFilter(ServerCommandSource commandSource, String filter) {
 		if (filter == null || filter == "") {
 			this.filter = null;
 		} else {
-			this.filter = Pattern.compile(filter);
+			this.scriptContext.s = commandSource;
+			this.filter = new CarpetExpression(RedEventLogger.scriptContext.host.main, filter, null, null);
+		}
+	}
+
+	private boolean runFilter(RedEvent ev) {
+		if (this.filter == null) return true;
+		if (CarpetServer.scriptServer.stopAll) return false;
+		try {
+			// TODO: add event-specific extra info variables here
+			RedEventLogger.scriptContext
+				.with("_", (c, t) -> new BlockValue(ev.block, ev.world, ev.pos))
+				.with("x", (c, t) -> new NumericValue(ev.pos.getX()).bindTo("x"))
+				.with("y", (c, t) -> new NumericValue(ev.pos.getY()).bindTo("y"))
+				.with("z", (c, t) -> new NumericValue(ev.pos.getZ()).bindTo("z"))
+				.with("info", (c, t) -> new StringValue(ev.getInfoString()));
+			// XXX: gnembon/fabric-carpet#157
+			//return this.filter.getExpr().eval(RedEventLogger.scriptContext).getBoolean();
+			return RedlogHaxxor.evalCarpetExpression(this.filter, RedEventLogger.scriptContext).getBoolean();
+		} catch (ExpressionException e) {
+			// TODO: Probably want better reporting than this
+			System.out.println(e);
+			return false;
+		} finally {
+			RedEventLogger.scriptContext.variables.clear(); // Reset the context for next time
 		}
 	}
 
@@ -90,30 +119,34 @@ public class RedEventLogger {
 	}
 
 	public void log(World world, BlockPos pos) {
-		this.log(world, pos, "");
+		this.log(new RedEvent((ServerWorld)world, pos));
 	}
 
-	public void log(World world, BlockPos pos, String info) {
-		this.log(world, world.getBlockState(pos), pos, info);
+	public void log(World world, BlockState block, BlockPos pos) {
+		this.log(new RedEvent((ServerWorld)world, block, pos));
 	}
 
-	public void log(World world, BlockState block, BlockPos pos, String info) {
+	public void log(RedEvent ev) {
 		if (!this.enabled()) return;
-		String blockType = Registry.BLOCK.getId(block.getBlock()).getPath();
 
 		if (this.filter != null) {
-			// TODO: improve filtering to allow more complex matching
-			if (!this.filter.matcher(blockType).matches()) return;
+			if (!this.runFilter(ev)) return;
 		}
+
+		String info = ev.getInfoString();
+		if (info != null) info += " ";
+		final String finalInfo = info; // 'cause Java complains at me otherwise
+
+		final String blockName = Registry.BLOCK.getId(ev.block.getBlock()).getPath();
 
 		this.logger.log(() -> {
 			return new BaseText[]{Messenger.c(
-				String.format("g [%d] ", world.getTime()),
+				String.format("g [%d] ", ev.world.getTime()),
 				"w " + RedEventLogger.getIndentString(),
 				"y " + this.kind + " ",
-				Messenger.tp("c", pos),
-				"p  " + info + (info == "" ? "" : " "),
-				"g " + blockType
+				Messenger.tp("c", ev.pos),
+				"p  " + finalInfo,
+				"g " + blockName
 			)};
 		});
 	}

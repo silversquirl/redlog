@@ -13,14 +13,17 @@ public class RedlogExtension implements CarpetExtension {
 		CarpetServer.manageExtension(new RedlogExtension());
 	}
 
+	public static String getFilter(String name) {
+		return (String)filterSettingsManager.getRule(name).get();
+	}
+
 	@Override
 	public void onGameStarted() {
 		filterSettingsManager.parseSettingsClass(RedlogFilterSettings.class);
 
 		CarpetServer.settingsManager.addRuleObserver((commandSource, rule, value) -> {
-			System.out.printf("%s = %s\n", rule.name, value); // debugging
 			if (rule.categories.contains("redlog")) {
-				RedEventLogger.get(rule.name).setFilter(value);
+				RedEventLogger.get(rule.name).setFilter(commandSource, value);
 			}
 		});
 	}
