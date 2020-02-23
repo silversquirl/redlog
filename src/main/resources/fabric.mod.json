@@ -6,14 +6,14 @@
 	"name": "RedLog",
 	"description": "A set of carpet loggers for debugging redstone contraptions",
 	"authors": [
-		"vktec"
+		"Samadi \"vktec\" van Koten"
 	],
 	"contact": {
 		"homepage": "https://github.com/vktec/redlog",
 		"sources": "https://github.com/vktec/redlog"
 	},
 
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/modid/icon.png",
 
 	"environment": "*",
