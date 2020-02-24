@@ -5,12 +5,8 @@
 	"mixins": [
 		"BlockStateMixin",
 		"LoggerRegistryMixin",
-		"MinecraftServerMixin",
 		"PistonBlockEntityMixin",
 		"ServerWorldMixin"
-	],
-	"client": [
-		"MinecraftClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
