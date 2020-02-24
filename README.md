@@ -6,7 +6,7 @@ A redstone logger for Minecraft 1.15, implemented as an extension to [fabric-car
 
 ## What does it do?
 
-RedLog is a Fabric mod that logs events in the world to your chat. It's used through Carpet's `/log` command, with filters (wip) configurable through the `/redlog` command.
+RedLog is a Fabric mod that logs events in the world to your chat. It's used through Carpet's `/log` command.
 
 Currently supported events:
 
@@ -18,10 +18,20 @@ Currently supported events:
 
 ## How do I filter events?
 
-Sometimes, the volume of events you get from the logger is simply too much. This is especially the case for the noisier loggers like block updates. In this case, you can employ the help of the filter system. Currently, you can only filter by block name, but this will change in the near future to allow much more complex filters.
+Sometimes, the volume of events you get from the logger is simply too much. This is especially the case for the noisier loggers like block updates. In this case, you can employ the help of the filter system.
 
-Filters are configured through the `/redlog` command, which has the same syntax as `/log`. For example, to configure RedLog to only log block events for sticky pistons, you could run the command `/redlog blockEvents sticky_piston`. To make this permanent across restarts, you would run `/redlog setDefault blockEvents sticky_piston`.
+A filters is a scarpet expression that has the following variables defined:
+
+- `_` The block that the event is at
+- `x`, `y`, `z` The coordinates of that block (also obtainable as a triple through `pos(_)`)
+- `info` The stringified information of the event, as shown in the logger output
+
+Filters are configured through logger options. For example, to configure RedLog to only log block events, but only for sticky pistons, you could run the command `/log blockEvents _ == 'sticky_piston'`, or to log only block updates at blocks with X coordinate 0, `/log blockUpdates x == 0`.
 
 ## How do I get it?
 
-Currently, RedLog is in the early stages of development. If you want to test it out, you'll need to compile it yourself. To do so, install a JDK, then clone or download the repository and run `./gradlew remapJar`. The resulting JAR can be found in `build/libs`.
+Currently, RedLog is in the early stages of development, but if you want to test it out you can check the [releases tab] to download the latest build.
+
+Alternatively, to get the very latest ~~bugs~~ features, you can compile it yourself. To do so, install a JDK, then clone or download the repository and run `./gradlew remapJar`. The resulting JAR can be found in `build/libs`.
+
+[releases tab]: https://github.com/vktec/redlog/releases
