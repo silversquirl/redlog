@@ -61,13 +61,16 @@ public class RedEventLogger {
 	private static final Map<String, CarpetExpression> filterCache = new WeakHashMap<>();
 	private static final CarpetContext scriptContext = new CarpetContext(CarpetServer.scriptServer.globalHost, null, new BlockPos(0, 0, 0));
 
-	private static final Map<String,String> name2kind = Map.of(
-		"block36", "B36",
-		"blockEvents", "BEV",
-		"blockUpdates", "BUP",
-		"stateUpdates", "SUP",
-		"tileTicks", "TIC"
-	);
+	private static String name2kind(String name) {
+		switch (name) {
+			case "block36": return "B36";
+			case "blockEvents": return "BEV";
+			case "blockUpdates": return "BUP";
+			case "stateUpdates": return "SUP";
+			case "tileTicks": return "TIC";
+		}
+		return null;
+	}
 
 	public static RedEventLogger get(String logName) {
 		return loggerCache.computeIfAbsent(logName, (name) -> new RedEventLogger(name));
@@ -78,7 +81,7 @@ public class RedEventLogger {
 
 	private RedEventLogger(String logName) {
 		this.logger = LoggerRegistry.getLogger(logName);
-		this.kind = name2kind.get(logName);
+		this.kind = RedEventLogger.name2kind(logName);
 	}
 
 	private static CarpetExpression computeOrGetFilter(String filterString) {
