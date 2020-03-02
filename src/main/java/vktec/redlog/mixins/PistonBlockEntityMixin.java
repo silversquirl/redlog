@@ -39,6 +39,6 @@ public abstract class PistonBlockEntityMixin extends BlockEntity {
 
 	private void log(boolean start) {
 		if (this.world.isClient) return;
-		RedEventLogger.get("block36").log(new RedBlock36Event((ServerWorld)this.world, this.getHeadBlockState(), this.pos, false));
+		RedEventLogger.get("block36").log(new RedBlock36Event((ServerWorld)this.world, this.getHeadBlockState(), this.pos, start));
 	}
 }

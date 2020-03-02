@@ -138,7 +138,8 @@ public class RedEventLogger {
 			if (!this.runFilter(filterString, ev)) return null;
 
 			String info = ev.getInfoString();
-			if (info != null) info += " ";
+			if (info == null) info = "";
+			else info += " ";
 
 			final String blockName = Registry.BLOCK.getId(ev.block.getBlock()).getPath();
 
