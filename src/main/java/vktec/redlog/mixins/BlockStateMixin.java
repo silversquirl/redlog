@@ -64,7 +64,7 @@ public abstract class BlockStateMixin {
 	@Inject(method = "getStateForNeighborUpdate", at = @At("HEAD"))
 	private void logStateUpdates(Direction dir, BlockState updaterBlock, IWorld world, BlockPos pos, BlockPos updaterPos, CallbackInfoReturnable ci) {
 		if (!(world instanceof ServerWorld)) return;
-		RedEventLogger.get("blockUpdates").log(new RedUpdateEvent((ServerWorld)world, (BlockState)(Object)this, pos, updaterBlock.getBlock()));
+		RedEventLogger.get("stateUpdates").log(new RedUpdateEvent((ServerWorld)world, (BlockState)(Object)this, pos, updaterBlock.getBlock()));
 		RedEventLogger.indent();
 	}
 
