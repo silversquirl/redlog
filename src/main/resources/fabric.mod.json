@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "redlog",
-	"version": "0.1.1",
+	"version": "0.1.2",
 
 	"name": "RedLog",
 	"description": "A set of carpet loggers for debugging redstone contraptions",
