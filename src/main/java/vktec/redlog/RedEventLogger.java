@@ -6,7 +6,6 @@ import carpet.logging.LoggerRegistry;
 import carpet.script.CarpetExpression;
 import carpet.script.CarpetContext;
 import carpet.script.Context;
-import carpet.script.RedlogHaxxor;
 import carpet.script.exception.ExpressionException;
 import carpet.script.value.BlockValue;
 import carpet.script.value.NumericValue;
@@ -107,9 +106,7 @@ public class RedEventLogger {
 				.with("y", (c, t) -> new NumericValue(ev.pos.getY()).bindTo("y"))
 				.with("z", (c, t) -> new NumericValue(ev.pos.getZ()).bindTo("z"))
 				.with("info", (c, t) -> new StringValue(ev.getInfoString()));
-			// XXX: gnembon/fabric-carpet#157
-			//return filter.getExpr().eval(RedEventLogger.scriptContext).getBoolean();
-			return RedlogHaxxor.evalCarpetExpression(filter, RedEventLogger.scriptContext).getBoolean();
+			return filter.getExpr().eval(RedEventLogger.scriptContext).getBoolean();
 		} catch (ExpressionException e) {
 			// TODO: Probably want better reporting than this
 			System.out.println(e);
