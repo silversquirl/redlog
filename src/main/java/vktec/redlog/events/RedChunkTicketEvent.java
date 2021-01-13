@@ -46,7 +46,7 @@ public class RedChunkTicketEvent extends RedEvent {
 	}
 
 	private int newLevel() {
-		if (this.ticket.getLevel() > this.currentLevel) {
+		if (this.ticket.getLevel() < this.currentLevel) {
 			return this.ticket.getLevel();
 		} else {
 			return this.currentLevel;
