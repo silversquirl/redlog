@@ -27,18 +27,31 @@ public abstract class PistonBlockEntityMixin extends BlockEntity {
 		super(BlockEntityType.PISTON);
 	}
 
+	@Override
 	public void setLocation(World world, BlockPos pos) {
+		if (!world.isClient) {
+			this.log(world, pos, true);
+		}
 		super.setLocation(world, pos);
-		this.log(true);
+		if (!world.isClient) {
+			RedEventLogger.end();
+		}
 	}
 
+	@Override
 	public void markRemoved() {
-		if (!this.isRemoved()) this.log(false);
+		boolean logged = false;
+		if (this.world != null && !this.world.isClient && !this.isRemoved()) {
+			logged = true;
+			this.log(this.world, this.pos, false);
+		}
 		super.markRemoved();
+		if (logged) {
+			RedEventLogger.end();
+		}
 	}
 
-	private void log(boolean start) {
-		if (this.world.isClient) return;
-		RedEventLogger.get("block36").log(new RedBlock36Event((ServerWorld)this.world, this.getHeadBlockState(), this.pos, start));
+	private void log(World world, BlockPos pos, boolean start) {
+		RedEventLogger.begin(new RedBlock36Event(world.getTime(), this.getHeadBlockState(), pos, start));
 	}
 }

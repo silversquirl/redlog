@@ -2,21 +2,27 @@ package vktec.redlog.events;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.server.world.ServerWorld;
 
 public class RedBlockEvent extends RedEvent {
 	public final int type, data;
 
-	public RedBlockEvent(ServerWorld world, BlockState block, BlockPos pos, int type, int data) {
-		super(world, block, pos);
+	public RedBlockEvent(long time, BlockState block, BlockPos pos, int type, int data) {
+		super(time, block, pos);
 		this.type = type;
 		this.data = data;
 	}
 
 	@Override
-	public String getInfoString() {
+	public String event() {
+		return "BEV";
+	}
+	@Override
+	public MutableText info() {
+		String str;
 		if (this.block.getBlock() instanceof PistonBlock) {
 			String typeStr;
 			switch (type) {
@@ -34,9 +40,10 @@ public class RedBlockEvent extends RedEvent {
 				break;
 			}
 			String dataStr = Direction.byId(data).getName();
-			return String.format("%s(%d) %s(%d)", typeStr, type, dataStr, data);
+			str = String.format("%s(%d) %s(%d)", typeStr, type, dataStr, data);
 		} else {
-			return String.format("%d %d", type, data);
+			str = String.format("%d %d", type, data);
 		}
+		return new LiteralText(str);
 	}
 }
