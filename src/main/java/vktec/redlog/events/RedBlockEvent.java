@@ -2,16 +2,15 @@ package vktec.redlog.events;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class RedBlockEvent extends RedEvent {
+public class RedBlockEvent extends RedEvent.AtBlock {
 	public final int type, data;
 
 	public RedBlockEvent(long time, BlockState block, BlockPos pos, int type, int data) {
-		super(time, block, pos);
+		super(time, pos, block);
 		this.type = type;
 		this.data = data;
 	}
@@ -21,7 +20,7 @@ public class RedBlockEvent extends RedEvent {
 		return "BEV";
 	}
 	@Override
-	public MutableText info() {
+	public String extraInfo() {
 		String str;
 		if (this.block.getBlock() instanceof PistonBlock) {
 			String typeStr;
@@ -40,10 +39,9 @@ public class RedBlockEvent extends RedEvent {
 				break;
 			}
 			String dataStr = Direction.byId(data).getName();
-			str = String.format("%s(%d) %s(%d)", typeStr, type, dataStr, data);
+			return String.format("%s(%d) %s(%d)", typeStr, type, dataStr, data);
 		} else {
-			str = String.format("%d %d", type, data);
+			return String.format("%d %d", type, data);
 		}
-		return new LiteralText(str);
 	}
 }

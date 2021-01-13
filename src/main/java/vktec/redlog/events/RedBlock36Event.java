@@ -1,14 +1,12 @@
 package vktec.redlog.events;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 
-public class RedBlock36Event extends RedEvent {
+public class RedBlock36Event extends RedEvent.AtBlock {
 	public final boolean start;
 	public RedBlock36Event(long time, BlockState block, BlockPos pos, boolean start) {
-		super(time, block, pos);
+		super(time, pos, block);
 		this.start = start;
 	}
 
@@ -18,7 +16,7 @@ public class RedBlock36Event extends RedEvent {
 	}
 
 	@Override
-	public MutableText info() {
-		return new LiteralText(this.start ? "start" : "finish");
+	public String extraInfo() {
+		return this.start ? "start" : "finish";
 	}
 }

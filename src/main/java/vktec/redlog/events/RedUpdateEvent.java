@@ -2,16 +2,14 @@ package vktec.redlog.events;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-public class RedUpdateEvent extends RedEvent {
+public class RedUpdateEvent extends RedEvent.AtBlock {
 	public final UpdateType type;
 	public final Block from;
 	public RedUpdateEvent(UpdateType type, long time, BlockState block, BlockPos pos, Block from) {
-		super(time, block, pos);
+		super(time, pos, block);
 		this.type = type;
 		this.from = from;
 	}
@@ -21,8 +19,8 @@ public class RedUpdateEvent extends RedEvent {
 		return this.type.event;
 	}
 	@Override
-	public MutableText info() {
-		return new LiteralText(String.format("from %s", Registry.BLOCK.getId(this.from).getPath()));
+	public String extraInfo() {
+		return String.format("from %s", Registry.BLOCK.getId(this.from).getPath());
 	}
 
 	public static enum UpdateType {

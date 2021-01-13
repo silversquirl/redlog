@@ -15,7 +15,6 @@ import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -112,10 +111,8 @@ public class RedEventLogger {
 			MutableText info = ev.info();
 			if (info != null) {
 				msg = msg.append(" ");
-				msg = msg.append(info.formatted(Formatting.DARK_PURPLE));
+				msg = msg.append(info);
 			}
-
-			msg = msg.append(new LiteralText(" " + Registry.BLOCK.getId(ev.block.getBlock()).getPath()).formatted(Formatting.GRAY));
 
 			this.output.sendSystemMessage(msg, Util.NIL_UUID);
 			this.indentLevel++;
