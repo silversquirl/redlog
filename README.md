@@ -38,8 +38,12 @@ Variables are available depending on the type of event:
 
 - `all` - always truthy (all events)
 - `time` - time at which event occurred, in game ticks (all events)
-- `block` - name of block at which event occurred (all events)
+- `block` - name of block at which event occurred (events related to blocks)
 - `x`, `y`, `z` - coordinates of block at which event occurred (all events)
+- `cx`, `cz` - coordinates of chunk at which event occurred (chunk ticket events)
+- `type` - ticket type (chunk ticket events)
+- `level` - ticket level (chunk ticket events)
+- `old`, `new` - old and new chunk load level (chunk ticket events)
 
 In addition, a variable with a truthy value is available, named after the type of the event.
 If a filter uses a variable that does not exist for the event type, the filter will not match that event.

@@ -4,7 +4,10 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"AbstractBlockStateMixin",
+		"ChunkTicketManagerMixin",
 		"PistonBlockEntityMixin",
+		"TACSTicketManagerAccessor",
+		"ThreadedAnvilChunkStorageAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

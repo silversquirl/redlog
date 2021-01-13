@@ -2,7 +2,6 @@ package vktec.redlog.events;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
