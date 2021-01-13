@@ -4,6 +4,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Formatting;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 
@@ -58,8 +60,11 @@ public class RedlogMod implements ModInitializer {
 		RedEventLogger log = RedEventLogger.getLogger(source.getEntityOrThrow());
 		List<RedFilterRule> rules = log.getRules();
 		source.sendFeedback(new LiteralText(String.format("%d rules:", rules.size())), true);
-		for (RedFilterRule rule : rules) {
-			source.sendFeedback(new LiteralText(" - " + rule.toString()), false);
+		for (int i = 0; i < rules.size(); i++) {
+			MutableText text = new LiteralText(" ");
+			text = text.append(new LiteralText(Integer.toString(i) + ": ").formatted(Formatting.GRAY));
+			text = text.append(rules.get(i).toString());
+			source.sendFeedback(text, false);
 		}
 		return 1;
 	}

@@ -4,13 +4,12 @@ import vktec.redlog.events.RedEvent;
 import vktec.redlog.expr.RedExpr;
 
 public class RedFilterRule {
+	private final String source;
 	private final RedExpr expr;
 	public final Action action;
 	public RedFilterRule(String expr, Action action) {
-		this(new RedExpr(expr), action);
-	}
-	public RedFilterRule(RedExpr expr, Action action) {
-		this.expr = expr;
+		this.source = expr;
+		this.expr = new RedExpr(expr);
 		this.action = action;
 	}
 
@@ -20,7 +19,8 @@ public class RedFilterRule {
 	}
 
 	public String toString() {
-		return String.format("%s <TODO>", this.action.name());
+		// TODO: convert actions into string rather than storing source code
+		return this.action.name() + " " + this.source;
 	}
 
 	public static enum Action {

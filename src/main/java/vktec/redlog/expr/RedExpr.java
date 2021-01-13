@@ -73,14 +73,14 @@ public class RedExpr {
 			switch (this.op) {
 			// TODO: short-circuiting
 			case OR:
-				a = stack.pop();
 				b = stack.pop();
+				a = stack.pop();
 				stack.push(new Boolean(((Boolean)a).booleanValue() || ((Boolean)b).booleanValue()));
 				break;
 
 			case AND:
-				a = stack.pop();
 				b = stack.pop();
+				a = stack.pop();
 				stack.push(new Boolean(((Boolean)a).booleanValue() && ((Boolean)b).booleanValue()));
 				break;
 
@@ -110,7 +110,7 @@ public class RedExpr {
 			}
 		}
 		public static int compare(Stack<Object> stack) {
-			Object a = stack.pop(), b = stack.pop();
+			Object b = stack.pop(), a = stack.pop();
 			if (a instanceof Number && b instanceof Number) {
 				return Double.compare(((Number)a).doubleValue(), ((Number)b).doubleValue());
 			} else {
