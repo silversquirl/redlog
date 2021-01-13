@@ -47,9 +47,9 @@ If a filter uses a variable that does not exist for the event type, the filter w
 Some example filters:
 
 ```
-/rlog pass blockEvent
+/rlog pass bev
 /rlog block (x > 10 || z > 7 || x <= 0 || z < -10) && y != 3
-/rlog pass tileTick && (x = 3 || y = 7)
+/rlog pass tic && (x = 3 || y = 7)
 ```
 
 ## How do I get it?
