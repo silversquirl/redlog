@@ -102,7 +102,7 @@ public class RedEventLogger {
 			msg = msg.append(new LiteralText(this.getIndentString()));
 			msg = msg.append(new LiteralText(ev.event()).formatted(Formatting.YELLOW));
 
-			String coord = String.format("(%d, %d, %d)", ev.pos.getX(), ev.pos.getY(), ev.pos.getZ());
+			String coord = String.format(" (%d, %d, %d)", ev.pos.getX(), ev.pos.getY(), ev.pos.getZ());
 			String tpCommand = String.format("/tp %d %d %d", ev.pos.getX(), ev.pos.getY(), ev.pos.getZ());
 			msg = msg.append(new LiteralText(coord).setStyle(Style.EMPTY
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, tpCommand))
