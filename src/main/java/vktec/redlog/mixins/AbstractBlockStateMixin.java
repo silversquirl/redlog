@@ -49,9 +49,9 @@ public abstract class AbstractBlockStateMixin {
 	}
 
 	@Inject(method = "neighborUpdate", at = @At("HEAD"))
-	private void beginBlockUpdate(World world, BlockPos pos, Block block, BlockPos posFrom, boolean notify, CallbackInfo ci) {
+	private void beginBlockUpdate(World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify, CallbackInfo ci) {
 		if (world.isClient) return;
-		RedEventLogger.begin(new RedUpdateEvent(RedUpdateEvent.UpdateType.BLOCK, world.getTime(), (BlockState)(Object)this, pos, block));
+		RedEventLogger.begin(new RedUpdateEvent(RedUpdateEvent.UpdateType.BLOCK, world.getTime(), (BlockState)(Object)this, pos, block, fromPos));
 	}
 
 	@Inject(method = "neighborUpdate", at = @At("TAIL"))
@@ -63,7 +63,7 @@ public abstract class AbstractBlockStateMixin {
 	@Inject(method = "getStateForNeighborUpdate", at = @At("HEAD"))
 	private void beginStateUpdate(Direction direction, BlockState state, WorldAccess world, BlockPos pos, BlockPos fromPos, CallbackInfoReturnable ci) {
 		if (!(world instanceof ServerWorld)) return;
-		RedEventLogger.begin(new RedUpdateEvent(RedUpdateEvent.UpdateType.STATE, ((ServerWorld)world).getTime(), (BlockState)(Object)this, pos, state.getBlock()));
+		RedEventLogger.begin(new RedUpdateEvent(RedUpdateEvent.UpdateType.STATE, ((ServerWorld)world).getTime(), (BlockState)(Object)this, pos, state.getBlock(), fromPos));
 	}
 
 	@Inject(method = "getStateForNeighborUpdate", at = @At("HEAD"))

@@ -8,10 +8,12 @@ import net.minecraft.util.registry.Registry;
 public class RedUpdateEvent extends RedEvent.AtBlock {
 	public final UpdateType type;
 	public final Block from;
-	public RedUpdateEvent(UpdateType type, long time, BlockState block, BlockPos pos, Block from) {
+	public final BlockPos fromPos;
+	public RedUpdateEvent(UpdateType type, long time, BlockState block, BlockPos pos, Block from, BlockPos fromPos) {
 		super(time, pos, block);
 		this.type = type;
 		this.from = from;
+		this.fromPos = fromPos;
 	}
 
 	@Override
@@ -20,7 +22,11 @@ public class RedUpdateEvent extends RedEvent.AtBlock {
 	}
 	@Override
 	public String extraInfo() {
-		return String.format("from %s", Registry.BLOCK.getId(this.from).getPath());
+		return String.format(
+			"from (%d, %d, %d) %s",
+			this.fromPos.getX(), this.fromPos.getY(), this.fromPos.getZ(),
+			Registry.BLOCK.getId(this.from).getPath()
+		);
 	}
 
 	public static enum UpdateType {

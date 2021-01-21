@@ -46,21 +46,22 @@ public abstract class RedEvent {
 
 		@Override
 		public MutableText info() {
+			String blockId = Registry.BLOCK.getId(this.block.getBlock()).getPath();
+			MutableText text = new LiteralText(blockId).formatted(Formatting.GRAY);
+
 			String extra = this.extraInfo();
-			MutableText text = new LiteralText(extra).formatted(Formatting.DARK_PURPLE);
 			if (extra != null) {
 				text = text.append(" ");
+				text = text.append(new LiteralText(extra).formatted(Formatting.DARK_PURPLE));
 			}
 
-			String blockId = Registry.BLOCK.getId(this.block.getBlock()).getPath();
-			text = text.append(new LiteralText(blockId).formatted(Formatting.GRAY));
 			return text;
 		}
 
 		@Override
 		public Map<String,Object> props() {
 			Map<String,Object> props = super.props();
-			props.put("block", this.block);
+			props.put("block", Registry.BLOCK.getId(this.block.getBlock()).getPath());
 			return props;
 		}
 	}
