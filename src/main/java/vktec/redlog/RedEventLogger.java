@@ -68,8 +68,9 @@ public class RedEventLogger {
 		this.output = output;
 	}
 
-	public void addRule(RedFilterRule rule) {
+	public int addRule(RedFilterRule rule) {
 		this.ruleset.add(rule);
+		return this.ruleset.size() - 1;
 	}
 	public void delRule(int index) {
 		this.ruleset.remove(index);
