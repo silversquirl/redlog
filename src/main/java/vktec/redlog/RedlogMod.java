@@ -63,9 +63,12 @@ public class RedlogMod implements ModInitializer {
 		List<RedFilterRule> rules = log.getRules();
 		source.sendFeedback(new LiteralText(String.format("%d rules:", rules.size())), true);
 		for (int i = 0; i < rules.size(); i++) {
+			RedFilterRule rule = rules.get(i);
+
 			MutableText text = new LiteralText(" ");
 			text = text.append(new LiteralText(Integer.toString(i) + ": ").formatted(Formatting.GRAY));
-			text = text.append(rules.get(i).toString());
+			text = text.append(rule.toString() + " ");
+			text = text.append(new LiteralText(Integer.toString(rule.getMatchCount()) + " matches").formatted(Formatting.DARK_GRAY));
 			source.sendFeedback(text, false);
 		}
 		return 1;

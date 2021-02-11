@@ -7,6 +7,8 @@ public class RedFilterRule {
 	private final String source;
 	private final RedExpr expr;
 	public final Action action;
+	private int matchCount;
+
 	public RedFilterRule(String expr, Action action) {
 		this.source = expr;
 		this.expr = new RedExpr(expr);
@@ -15,7 +17,15 @@ public class RedFilterRule {
 
 	public boolean match(RedEvent ev) {
 		Object result = this.expr.eval(ev.props());
-		return ((Boolean)result).booleanValue();
+		boolean matched = ((Boolean)result).booleanValue();
+		if (matched) {
+			this.matchCount++;
+		}
+		return matched;
+	}
+
+	public int getMatchCount() {
+		return this.matchCount;
 	}
 
 	public String toString() {
