@@ -6,6 +6,7 @@
 		"AbstractBlockStateMixin",
 		"ChunkTicketManagerMixin",
 		"PistonBlockEntityMixin",
+		"ServerWorldMixin",
 		"TACSTicketManagerAccessor",
 		"ThreadedAnvilChunkStorageAccessor"
 	],
