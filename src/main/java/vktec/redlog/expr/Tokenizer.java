@@ -1,20 +1,19 @@
 package vktec.redlog.expr;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Tokenizer implements Iterator<Tokenizer.Token> {
 	private static final Pattern pattern = Pattern.compile("(\\()|(\\))|(&&|\\|\\||[<>=]=?|!=)|(!)|\"([^\"]*)\"|'([^']*)'|([+-]?(?:(?:\\d*\\.\\d+|\\d+\\.)(?:e[+-]?\\d+)?|\\d+e[+-]\\d+))|([+-]?\\d+)|([a-zA-Z_]\\w*)");
-	private static final List<TokenType> groups = List.of(
+	private static final TokenType[] groups = new TokenType[]{
 		TokenType.LPAR, TokenType.RPAR,
 		TokenType.PREFIX, TokenType.BINARY,
 		TokenType.STRING, TokenType.STRING,
 		TokenType.NUM, TokenType.NUM,
 		TokenType.IDENT
-	);
+	};
 
 	private final Matcher matcher;
 	private Token nextTok;
@@ -26,10 +25,10 @@ class Tokenizer implements Iterator<Tokenizer.Token> {
 
 	private Token getNext() {
 		if (this.matcher.find()) {
-			for (int i = 0; i < groups.size(); i++) {
+			for (int i = 0; i < groups.length; i++) {
 				String text = this.matcher.group(i+1);
 				if (text != null) {
-					return new Token(groups.get(i), text);
+					return new Token(groups[i], text);
 				}
 			}
 		}
